@@ -42,13 +42,15 @@ displays as **"1"**. The table lists the **displayed** numbers.
 | 2 | **Carrier**    | 1–5                     | 1 sine · 2 triangle · 3 parabola · 4 saw · 5 square (default **2**) |
 | 3 | **Mod Wave**   | 1–6                     | 1 sine · 2 triangle · 3 parabola · 4 saw · 5 square · 6 noise (default **1**) |
 | 4 | **Mod Ratio**  | 1–12                    | frequency factor `0.25, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16` (default **3** = ×1) |
-| 5 | **Mod Detune** | −100…100 %              | modulator fine detune, ±10 Hz at the extremes, fine around 0 |
+| 5 | **Mod Detune** | 0…100 %                 | modulator fine detune, 0 % = none … +10 Hz, fine near 0 |
 
 Notes:
 
-- The modulator tracks the keyboard and pitch bend. Negative modulator
-  frequencies are allowed (**through-zero**) and the phase wraps cleanly in
-  both directions.
+- Detune is unipolar on purpose: the minilogue xd loads edit parameters at
+  their minimum, so `0 %` guarantees **no detune on load** (a bipolar value
+  would come up fully detuned at `−100 %`).
+- The modulator tracks the keyboard and pitch bend; the phase accumulator is
+  sign-safe, so through-zero stays glitch-free.
 - **Noise** (Mod Wave = 6) ignores Ratio and Detune.
 - The band-limited waves (parabola / saw / square) use the SDK's anti-aliased
   tables, and the modulator's contribution is faded out between 18 and 22 kHz

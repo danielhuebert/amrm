@@ -6,7 +6,7 @@
         "api" : "1.1-0",
         "dev_id" : 0,
         "prg_id" : 0,
-        "version" : "1.0-0",
+        "version" : "1.1-0",
         "name" : "AMRM",
         "num_param" : 5,
         "params" : [
@@ -14,7 +14,7 @@
             ["Carrier",    0,    4,  ""],
             ["Mod Wave",   0,    5,  ""],
             ["Mod Ratio",  0,   11,  ""],
-            ["Mod Detune", -100, 100, "%"]
+            ["Mod Detune", 0, 100, "%"]
         ]
     }
 }

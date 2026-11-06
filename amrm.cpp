@@ -102,8 +102,8 @@ void OSC_CYCLE(const user_osc_param_t * const params,
   const uint8_t mod_wav = s_mod_wave;
   const bool    noise   = (mod_wav == 5);
 
-  // Modulator frequency: follows the keyboard/pitch bend, plus a fixed detune.
-  // Negative frequencies are allowed (through-zero) and wrap in both directions.
+  // Modulator frequency: follows the keyboard/pitch bend, plus a small detune.
+  // Phase wrapping stays sign-safe (si_floorf) even if f_m ever goes negative.
   const float f_m = noise ? 0.f : (f_c * s_ratio + s_detune_hz);
   const float w_m = f_m * k_samplerate_recipf;
 
@@ -191,11 +191,12 @@ void OSC_PARAM(uint16_t index, uint16_t value)
     s_ratio = k_ratios[(value > 11) ? 11 : value];
     break;
   case k_user_osc_param_id5:
-    // Bipolar percent: value arrives 0..200 (100 = 0 %). Map to d in [-1,1],
-    // then detune in Hz = sign(d) * 10 * d^2 (fine near 0, +/-10 Hz at the ends).
+    // Unipolar percent: value arrives 0..100. A fresh patch loads edit params at
+    // their minimum on the minilogue xd, so detune is unipolar with 0 % = no
+    // detune (neutral on load). Quadratic curve -> fine near 0, +10 Hz at 100 %.
     {
-      const float d = clip1m1f(((int32_t)value - 100) * 0.01f);
-      s_detune_hz = 10.f * d * si_fabsf(d);
+      const float d = clip01f(value * 0.01f);
+      s_detune_hz = 10.f * d * d;
     }
     break;
   default:
